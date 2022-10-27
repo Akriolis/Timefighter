@@ -3,7 +3,6 @@ package com.raywenderlich.timefighter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -16,14 +15,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gameScoreTextView: TextView
     private lateinit var timeLeftTextView: TextView
     private lateinit var tapMeButton: Button
-    private var score = 0
+
+    private var score: Int = 0
 
     private var gameStarted = false
 
     private lateinit var countDownTimer: CountDownTimer
-    private var initialCountDown: Long = 10000
+    private var initialCountDown: Long = 15000
     private var countDownInterval: Long = 1000
-    private var timeLeft = 10
+
+    private var timeLeft = (initialCountDown.toInt() / 1000)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +38,13 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState != null){
             score = savedInstanceState.getInt(SCORE_KEY)
-            timeLeft = savedInstanceState.getInt(TIME_LEFT_KEY)
-            restoreGame()
+            if (savedInstanceState.getInt(TIME_LEFT_KEY) != 0) {
+                timeLeft = savedInstanceState.getInt(TIME_LEFT_KEY)
+                restoreGame()
+            }else{
+                Log.d(TAG,"if timeLeft is zero, program is not working properly")
+                resetGame()
+            }
         } else{
             resetGame()
         }
@@ -46,17 +52,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle){
         super.onSaveInstanceState(outState)
-        outState.putInt(SCORE_KEY, score)
-        outState.putInt(TIME_LEFT_KEY, timeLeft)
-        countDownTimer.cancel()
-
+        if (score != 0 && timeLeft != ((initialCountDown.toInt()) / 1000)) {
+            outState.putInt(SCORE_KEY, score)
+            outState.putInt(TIME_LEFT_KEY, timeLeft)
+            countDownTimer.cancel()
+        }
         Log.d(TAG, "onSaveInstanceState: Saving Score: $score & Time left $timeLeft")
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy called.")
+
+        Log.d(TAG, "onDestroy called score is $score, timeLeft is $timeLeft.")
     }
 
     private fun incrementScore(){
@@ -70,9 +78,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resetGame(){
+
         score = 0
 
-        gameScoreTextView.text = getString(R.string.your_score,score)
+        gameScoreTextView.text = getString(R.string.your_score, score)
 
         timeLeftTextView.text = getString(R.string.time_left,timeLeft)
 
@@ -88,7 +97,6 @@ class MainActivity : AppCompatActivity() {
                 endGame()
             }
         }
-
         gameStarted = false
     }
 
