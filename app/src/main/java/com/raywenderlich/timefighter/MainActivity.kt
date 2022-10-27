@@ -40,25 +40,22 @@ class MainActivity : AppCompatActivity() {
 
         score++
 
-        val newScore = getString(R.string.your_score, score)
-        gameScoreTextView.text = newScore
+        gameScoreTextView.text = getString(R.string.your_score,score)
     }
 
     private fun resetGame(){
         score = 0
-        val initialScore = getString(R.string.your_score,score)
-        gameScoreTextView.text = initialScore
 
-        val initialTimeLeft = getString(R.string.time_left,timeLeft)
-        timeLeftTextView.text = initialTimeLeft
+        gameScoreTextView.text = getString(R.string.your_score,score)
+
+        timeLeftTextView.text = getString(R.string.time_left,timeLeft)
 
         countDownTimer = object : CountDownTimer(initialCountDown,countDownInterval){
 
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = millisUntilFinished.toInt() / 1000
 
-                val timeLeftString = getString(R.string.time_left, timeLeft)
-                timeLeftTextView.text = timeLeftString
+                timeLeftTextView.text = getString(R.string.time_left,timeLeft)
             }
 
             override fun onFinish() {
