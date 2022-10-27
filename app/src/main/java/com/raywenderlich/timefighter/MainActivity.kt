@@ -21,7 +21,12 @@ class MainActivity : AppCompatActivity() {
     private var gameStarted = false
 
     private lateinit var countDownTimer: CountDownTimer
-    private var initialCountDown: Long = 15000
+
+    /**
+     * Variable that affect main timing of the game (in milliseconds)
+     */
+    private var initialCountDown: Long = 10000
+
     private var countDownInterval: Long = 1000
 
     private var timeLeft = (initialCountDown.toInt() / 1000)
@@ -37,12 +42,15 @@ class MainActivity : AppCompatActivity() {
         tapMeButton.setOnClickListener { incrementScore() }
 
         if (savedInstanceState != null){
+            tapMeButton.text = getString(R.string.tap_me)
             score = savedInstanceState.getInt(SCORE_KEY)
             if (savedInstanceState.getInt(TIME_LEFT_KEY) != 0) {
+                // there was a bug when you rotate the screen exactly in moment when score hit 0
+                // this led to the infinite loop with 0 score
                 timeLeft = savedInstanceState.getInt(TIME_LEFT_KEY)
                 restoreGame()
             }else{
-                Log.d(TAG,"if timeLeft is zero, program is not working properly")
+                Log.d(TAG,"timeLeft is zero, we have to reset it")
                 resetGame()
             }
         } else{
@@ -56,18 +64,18 @@ class MainActivity : AppCompatActivity() {
             outState.putInt(SCORE_KEY, score)
             outState.putInt(TIME_LEFT_KEY, timeLeft)
             countDownTimer.cancel()
+            Log.d(TAG, "onSaveInstanceState: Saving Score: $score & Time left $timeLeft")
         }
-        Log.d(TAG, "onSaveInstanceState: Saving Score: $score & Time left $timeLeft")
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
         Log.d(TAG, "onDestroy called score is $score, timeLeft is $timeLeft.")
     }
 
     private fun incrementScore(){
+        tapMeButton.text = getString(R.string.tap_me)
         if(!gameStarted){
             startGame()
         }
@@ -78,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resetGame(){
-
+        tapMeButton.text = getString(R.string.tap_to_start)
         score = 0
 
         gameScoreTextView.text = getString(R.string.your_score, score)
@@ -98,6 +106,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         gameStarted = false
+
     }
 
     private fun restoreGame(){
@@ -119,7 +128,6 @@ class MainActivity : AppCompatActivity() {
 
         countDownTimer.start()
         gameStarted = true
-
     }
 
     private fun startGame(){
@@ -130,14 +138,12 @@ class MainActivity : AppCompatActivity() {
     private fun endGame(){
         Toast.makeText(this, getString(R.string.game_over_message,score),Toast.LENGTH_LONG).show()
         resetGame()
-
+        tapMeButton.text = getString(R.string.tap_to_start)
     }
 
     companion object{
         private const val SCORE_KEY = "SCORE_KEY"
         private const val TIME_LEFT_KEY = "TIME_LEFT_KEY"
-
-
     }
 
 
