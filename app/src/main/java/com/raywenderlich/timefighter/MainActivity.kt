@@ -45,14 +45,19 @@ class MainActivity : AppCompatActivity() {
         timeLeftTextView = findViewById(R.id.time_left_text_view)
         tapMeButton = findViewById(R.id.tap_me_button)
 
+        val bounceAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.bounce)
+
         if (savedInstanceState != null){
             //checking for existing savedInstanceState
             tapMeButton.text = getString(R.string.tap_me)
+
             score = savedInstanceState.getInt(SCORE_KEY)
             if (savedInstanceState.getInt(TIME_LEFT_KEY) != 0) {
                 // there was a bug - when you rotated the screen exactly in moment when score hit 0
                 // it was led to the infinite loop with 0 score
                 timeLeft = savedInstanceState.getInt(TIME_LEFT_KEY)
+                val rotateAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.rotate)
+                gameScoreTextView.startAnimation(rotateAnimation)
                 restoreGame()
             }else{
                 //Log.d(TAG,"if timeLeft is zero, we have to reset it")
@@ -63,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         tapMeButton.setOnClickListener {
-            val bounceAnimation = AnimationUtils.loadAnimation(this,R.anim.bounce)
+
             it.startAnimation(bounceAnimation)
             incrementScore()
         }
@@ -76,6 +81,7 @@ class MainActivity : AppCompatActivity() {
             outState.putInt(SCORE_KEY, score)
             outState.putInt(TIME_LEFT_KEY, timeLeft)
             countDownTimer.cancel()
+
             //Log.d(TAG, "onSaveInstanceState: Saving Score: $score & Time left $timeLeft")
         }
 
@@ -103,8 +109,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun incrementScore(){
         tapMeButton.text = getString(R.string.tap_me)
+
         if(!gameStarted){
             startGame()
+            val rotateAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.rotate)
+            gameScoreTextView.startAnimation(rotateAnimation)
         }
 
         score++
@@ -181,6 +190,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, getString(R.string.game_over_message,score),Toast.LENGTH_LONG).show()
         resetGame()
         tapMeButton.text = getString(R.string.tap_to_start)
+        gameScoreTextView.clearAnimation()
     }
 
     companion object{
