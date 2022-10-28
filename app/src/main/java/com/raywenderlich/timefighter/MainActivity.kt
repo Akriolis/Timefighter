@@ -1,14 +1,18 @@
 package com.raywenderlich.timefighter
 
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * The variable that affect main timing of the game (in milliseconds)
      */
-    private var initialCountDown: Long = 10000
+    private var initialCountDown: Long = 15000
 
     private var countDownInterval: Long = 1000
 
@@ -76,6 +80,21 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.about_item){
+            showInfo()
+        }
+        return true
+    }
+
+
 
 //    override fun onDestroy() {
 //        super.onDestroy()
@@ -169,5 +188,14 @@ class MainActivity : AppCompatActivity() {
         private const val TIME_LEFT_KEY = "TIME_LEFT_KEY"
     }
 
+    private fun showInfo(){
+        val dialogTitle = getString(R.string.about_title, BuildConfig.VERSION_NAME)
+        val dialogMessage = getString(R.string.about_message)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(dialogTitle)
+        builder.setMessage(dialogMessage)
+        builder.create().show()
+    }
 
 }
