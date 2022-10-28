@@ -17,6 +17,7 @@ import android.widget.Toast
 class MainActivity : AppCompatActivity() {
 
     //private val TAG = MainActivity::class.java.simpleName
+    // this tag was used for logging
 
     private lateinit var gameScoreTextView: TextView
     private lateinit var timeLeftTextView: TextView
@@ -41,23 +42,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //Log.d(TAG,"onCreate called. Score is: $score")
+
         gameScoreTextView = findViewById(R.id.game_score_text_view)
         timeLeftTextView = findViewById(R.id.time_left_text_view)
         tapMeButton = findViewById(R.id.tap_me_button)
 
-        val bounceAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.bounce)
-
         if (savedInstanceState != null){
             //checking for existing savedInstanceState
             tapMeButton.text = getString(R.string.tap_me)
-
             score = savedInstanceState.getInt(SCORE_KEY)
             if (savedInstanceState.getInt(TIME_LEFT_KEY) != 0) {
-                // there was a bug - when you rotated the screen exactly in moment when score hit 0
+                // there was a bug - when you rotated the screen exactly in moment when score hit 0 -
                 // it was led to the infinite loop with 0 score
                 timeLeft = savedInstanceState.getInt(TIME_LEFT_KEY)
                 val rotateAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.rotate)
                 gameScoreTextView.startAnimation(rotateAnimation)
+                //saving rotate animation from autostart during re-create mainActivity
                 restoreGame()
             }else{
                 //Log.d(TAG,"if timeLeft is zero, we have to reset it")
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         tapMeButton.setOnClickListener {
-
+            val bounceAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.bounce)
             it.startAnimation(bounceAnimation)
             incrementScore()
         }
@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
             outState.putInt(SCORE_KEY, score)
             outState.putInt(TIME_LEFT_KEY, timeLeft)
             countDownTimer.cancel()
-
             //Log.d(TAG, "onSaveInstanceState: Saving Score: $score & Time left $timeLeft")
         }
 
@@ -100,8 +99,6 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-
-
 //    override fun onDestroy() {
 //        super.onDestroy()
 //        Log.d(TAG, "onDestroy called score is $score, timeLeft is $timeLeft.")
@@ -114,6 +111,8 @@ class MainActivity : AppCompatActivity() {
             startGame()
             val rotateAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.rotate)
             gameScoreTextView.startAnimation(rotateAnimation)
+            //animation started when game started
+            //ended in endGame()
         }
 
         score++
@@ -134,11 +133,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = millisUntilFinished.toInt() / 1000
-
                 timeLeftTextView.text = getString(R.string.time_left,timeLeft)
 
                 if (timeLeft <= 5) {
-
                     val pulseAnimation: Animation =
                         AnimationUtils.loadAnimation(this@MainActivity, R.anim.pulse)
                     timeLeftTextView.startAnimation(pulseAnimation)
