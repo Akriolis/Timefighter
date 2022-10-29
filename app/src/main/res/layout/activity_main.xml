@@ -11,9 +11,12 @@
         android:id="@+id/game_score_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginStart="@dimen/counters_horizontal_margin"
+        android:layout_marginTop="@dimen/counters_top_margin"
         android:text="@string/your_score"
+        app:layout_constraintEnd_toStartOf="@+id/time_left_text_view"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,22 +24,22 @@
         android:id="@+id/time_left_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginTop="@dimen/counters_top_margin"
+        android:layout_marginEnd="@dimen/counters_horizontal_margin"
         android:text="@string/time_left"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/game_score_text_view"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/tap_me_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorSecondary"
         android:text="@string/tap_to_start"
-        android:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

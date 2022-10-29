@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="counters_horizontal_margin">52dp</dimen>
+    <dimen name="counters_top_margin">140dp</dimen>
+
+</resources>
