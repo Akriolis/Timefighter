@@ -38,6 +38,18 @@ class MainActivity : AppCompatActivity() {
 
     private var timeLeft = (initialCountDown.toInt() / 1000)
 
+    private val pulseAnimation by lazy {
+        AnimationUtils.loadAnimation(this@MainActivity, R.anim.pulse)
+    }
+
+    private val bounceAnimation: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.bounce)
+    }
+
+    private val rotateAnimation: Animation by lazy {
+        AnimationUtils.loadAnimation(this, R.anim.rotate)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         tapMeButton.setOnClickListener {
-            val bounceAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.bounce)
             it.startAnimation(bounceAnimation)
             incrementScore()
         }
@@ -109,7 +120,6 @@ class MainActivity : AppCompatActivity() {
 
         if(!gameStarted){
             startGame()
-            val rotateAnimation: Animation = AnimationUtils.loadAnimation(this,R.anim.rotate)
             gameScoreTextView.startAnimation(rotateAnimation)
             //animation started when game started
             //ended in endGame()
@@ -136,8 +146,7 @@ class MainActivity : AppCompatActivity() {
                 timeLeftTextView.text = getString(R.string.time_left,timeLeft)
 
                 if (timeLeft <= 5) {
-                    val pulseAnimation: Animation =
-                        AnimationUtils.loadAnimation(this@MainActivity, R.anim.pulse)
+
                     timeLeftTextView.startAnimation(pulseAnimation)
                 }
             }
@@ -163,8 +172,6 @@ class MainActivity : AppCompatActivity() {
 
                 if (timeLeft <= 5) {
 
-                    val pulseAnimation: Animation =
-                        AnimationUtils.loadAnimation(this@MainActivity, R.anim.pulse)
                     timeLeftTextView.startAnimation(pulseAnimation)
                 }
             }
